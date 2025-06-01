@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Integrated Fireworks - Custom Backgrounds</title>
+    <title>fireworx</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -11,19 +11,44 @@
             font-family: 'Inter', sans-serif;
             overscroll-behavior: none;
         }
+        /* Custom Scrollbar Styles (for Webkit browsers) */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a; /* Very dark track */
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #444; /* Darker gray thumb */
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #666; /* Lighter gray on hover */
+        }
+
+        /* For Firefox */
+        * {
+          scrollbar-width: thin;
+          scrollbar-color: #444 #1a1a1a;
+        }
+
         .canvas-container-2d { /* For the 2D placement canvas */
-            background-color: #1a1a1a;
+            background-color: #0b0b0b;
             width: 100%;
-            height: 350px; 
-            max-width: 1342px; 
+            height: 350px;
+            max-width: 1342px;
             margin: 0 auto;
-            border: 1px solid #444;
+            border: 1px solid #414141;
             border-radius: 0.5rem;
             /* background-color will be handled by JS or fallback */
         }
         #threejs-canvas-container { /* For the 3D show canvas */
             width: 100%;
-            height: 700px; 
+            height: 700px;
             margin: 0 auto;
             /* background-color will be handled by JS or fallback */
             border-radius: 0.5rem;
@@ -39,7 +64,7 @@
             transition: background-color 0.2s;
         }
         .firework-item-in-list.selected {
-            background-color: #dbeafe; /* Tailwind blue-100 */
+            background-color: #3a3a3a; /* Darker gray for selected */
         }
         .color-input-wrapper {
             display: flex;
@@ -59,24 +84,66 @@
         }
         .modal {
             display: none; position: fixed; z-index: 1000; left: 0; top: 0;
-            width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);
+            width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); /* Even Darker overlay */
         }
         .modal-content {
-            background-color: #fefefe; margin: 15% auto; padding: 20px;
-            border: 1px solid #888; width: 80%; max-width: 1400px;
-            border-radius: 0.5rem; text-align: center;
+            background-color: #1f1f1f; margin: 10% auto; padding: 30px; /* Slightly higher margin, increased padding */
+            border: 1px solid #333; /* Darker border */
+            width: 95%; max-width: 500px; /* Adjusted max width */
+            border-radius: 0.75rem; text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.7); /* Darker shadow */
+            color: #e5e7eb; /* Ensure text is light */
         }
         .modal-close-button {
-            background-color: #4CAF50; color: white; padding: 10px 20px;
-            border: none; border-radius: 0.375rem; cursor: pointer; margin-top: 15px;
+            background-color: #333; /* Dark gray button */
+            color: white; padding: 10px 20px;
+            border: none; border-radius: 0.375rem; cursor: pointer; margin-top: 20px; /* Increased margin top */
+            transition: background-color 0.2s;
         }
-    /* Dark-mode overrides */
-    .bg-white { background-color: #1f1f1f !important; }
-    .bg-gray-50 { background-color: #262626 !important; }
-    p, label, h1, h2, h3, span { color: #e5e7eb !important; }
+        .modal-close-button:hover {
+            background-color: #444; /* Slightly lighter gray on hover */
+        }
+    /* Dark-mode overrides (Adjusted and refined) */
+    .bg-white { background-color: #1a1a1a !important; }
+    .bg-gray-50 { background-color: #222 !important; } /* Used for placed fireworks list background */
+    p, label, h1, h2, h3, span, strong { color: #e5e7eb !important; } /* Ensure all text is light */
     input, button, select, textarea { background-color: #2d2d2d !important; border-color: #555 !important; color: #e5e7eb !important; }
-    .modal-content { background-color: #222222 !important; color: #e5e7eb !important; }
-    .shadow-lg { box-shadow: 0 8px 20px rgba(0,0,0,0.7) !important; }
+    .modal-content { background-color: #1f1f1f !important; color: #e5e7eb !important; border-color: #333 !important; }
+    .shadow-lg { box-shadow: 0 8px 25px rgba(0,0,0,0.7) !important; } /* Darker shadow */
+
+    /* Specific adjustments for dark theme */
+    .border-gray-300 { border-color: #444 !important; } /* Darker border for inputs */
+    .bg-gray-200 { background-color: #333 !important; } /* Darker background for range sliders */
+    .hover\:bg-gray-100:hover { background-color: #3a3a3a !important; } /* Darker hover for list items */
+    .text-gray-700 { color: #bbb !important; } /* Lighter text for labels */
+    .text-gray-500 { color: #888 !important; } /* Lighter text for smaller hints */
+    .text-gray-400 { color: #999 !important; } /* Lighter text for inactive tabs */
+    .hover\:text-gray-200:hover { color: #eee !important; } /* Lighter hover text for tabs */
+    
+    /* Custom styles for card-like firework list items */
+    .firework-item-in-list {
+        background-color: #2d2d2d; /* Match input/button background */
+        border-color: #444; /* Match input border */
+        padding: 0.75rem; /* Increased padding */
+        border-radius: 0.5rem; /* Match general border-radius */
+        margin-bottom: 0.5rem; /* Add space between items */
+        transition: background-color 0.2s ease-in-out;
+    }
+    .firework-item-in-list:hover {
+        background-color: #3a3a3a; /* Darker hover */
+    }
+    .firework-item-in-list.selected {
+        background-color: #4a4a4a; /* Distinct selected color */
+        border-color: #666; /* Slightly lighter border for selected */
+    }
+    .firework-item-in-list span {
+        color: #e5e7eb; /* Ensure text color is light */
+    }
+    .firework-item-in-list button {
+        background-color: transparent !important; /* Ensure buttons within list items don't have background */
+        border: none !important;
+    }
+
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased">
@@ -88,81 +155,95 @@
         </div>
     </div>
 
-    <div class="container mx-auto p-4">
-        <header class="mb-6 text-center">
-            <h1 class="text-4xl font-bold text-indigo-600">Fireworks Show Creator</h1>
-<p class="text-sm text-gray-400">Design in 2D, Preview in 3D!</p>
+    <div class="container mx-auto p-8"> <!-- Increased padding -->
+        <header class="mb-10 text-center"> <!-- Increased margin bottom -->
+            <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">fireworx</h1> <!-- Larger, bolder, gradient title -->
+            <p class="text-base text-gray-400 mt-2">Design in 2D, Preview in 3D!</p> <!-- Slightly larger hint text -->
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-<div class="lg:col-span-1 bg-gray-800 p-6 rounded-lg shadow-lg">
-                <h2 class="text-2xl font-semibold mb-4 text-indigo-500">1. Define Firework Types</h2>
-                <form id="fireworkPropertiesForm" class="space-y-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10"> <!-- Increased gap -->
+            <div class="lg:col-span-1 bg-gray-800 p-7 rounded-lg shadow-xl border border-gray-700"> <!-- Increased padding, darker border, stronger shadow -->
+                <h2 class="text-2xl font-semibold mb-5 text-indigo-400">1. Define Firework Types</h2> <!-- Increased margin bottom -->
+                <form id="fireworkPropertiesForm" class="space-y-6"> <!-- Increased space between form elements -->
                     <div>
-                        <label for="fireworkName" class="block text-sm font-medium text-gray-700">Name:</label>
-                        <input type="text" id="fireworkName" value="My Firework" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2">
+                        <label for="fireworkName" class="block text-sm font-medium text-gray-300">Name:</label> <!-- Lighter label color -->
+                        <input type="text" id="fireworkName" value="My Firework" class="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-2 bg-gray-700 text-gray-200"> <!-- Darker border, blue focus ring, darker background, lighter text -->
                     </div>
                     <div>
-                        <label for="burstHeight3D" class="block text-sm font-medium text-gray-700">3D Burst Height (units): <span id="burstHeight3DValue">250</span></label>
-                        <input type="range" id="burstHeight3D" min="50" max="500" value="250" class="mt-1 block w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        <label for="burstHeight3D" class="block text-sm font-medium text-gray-300">3D Burst Height (units): <span id="burstHeight3DValue">250</span></label> <!-- Lighter label color -->
+                        <input type="range" id="burstHeight3D" min="50" max="500" value="250" class="mt-1 block w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"> <!-- Darker slider track -->
                     </div>
                     <div>
-                        <label for="burstRadius3D" class="block text-sm font-medium text-gray-700">3D Burst Radius (units): <span id="burstRadius3DValue">75</span></label>
-                        <input type="range" id="burstRadius3D" min="10" max="150" value="75" class="mt-1 block w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        <label for="burstRadius3D" class="block text-sm font-medium text-gray-300">3D Burst Radius (units): <span id="burstRadius3DValue">75</span></label> <!-- Lighter label color -->
+                        <input type="range" id="burstRadius3D" min="10" max="150" value="75" class="mt-1 block w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"> <!-- Darker slider track -->
                     </div>
-                    
-                    <p class="text-sm font-medium text-gray-700">Burst Colors (up to 4):</p>
-                    <div id="burstColorsContainer" class="space-y-2">
-                        </div>
-                    <button type="button" id="addBurstColorButton" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">+ Add Color</button>
+
+                    <p class="text-sm font-medium text-gray-300">Burst Colors (up to 4):</p> <!-- Lighter label color -->
+                    <div id="burstColorsContainer" class="space-y-4"> <!-- Increased space between color inputs -->
+                    </div>
+                    <button type="button" id="addBurstColorButton" class="text-sm text-teal-400 hover:text-teal-300 font-medium">+ Add Color</button> <!-- Slightly adjusted teal color -->
 
                     <div>
-                        <label for="rocketSpeed3D" class="block text-sm font-medium text-gray-700">3D Rocket Speed (1-5): <span id="rocketSpeed3DValue">2.5</span></label>
-                        <input type="range" id="rocketSpeed3D" min="1" max="5" step="0.1" value="2.5" class="mt-1 block w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        <label for="rocketSpeed3D" class="block text-sm font-medium text-gray-300">3D Rocket Speed (1-5): <span id="rocketSpeed3DValue">2.5</span></label> <!-- Lighter label color -->
+                        <input type="range" id="rocketSpeed3D" min="1" max="5" step="0.1" value="2.5" class="mt-1 block w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"> <!-- Darker slider track -->
                     </div>
                     <input type="hidden" id="editingFireworkTypeId">
-                    <button type="submit" id="addOrUpdateFireworkTypeButton" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75">Add Firework Type</button>
+                    <button type="submit" id="addOrUpdateFireworkTypeButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-colors duration-200">Add Firework Type</button> <!-- Changed to blue, increased padding, added transition -->
                 </form>
 
-                <hr class="my-6">
-                <h3 class="text-xl font-semibold mb-3 text-indigo-500">Defined Firework Types</h3>
-                <div id="fireworkTypesList" class="space-y-2 max-h-60 overflow-y-auto">
-                    </div>
+                <hr class="my-8 border-gray-700"> <!-- Increased margin, darker HR -->
+                <h3 class="text-xl font-semibold mb-4 text-indigo-400">Defined Firework Types</h3> <!-- Increased margin bottom -->
+                <div id="fireworkTypesList" class="space-y-3 max-h-72 overflow-y-auto pr-2"> <!-- Increased space, increased max height, added right padding for scrollbar -->
+                    <!-- Firework items will be rendered here by JS -->
+                </div>
+                <div class="mt-6 flex space-x-3"> <!-- Increased margin top and space -->
+                    <button id="saveCollectionButton" class="w-1/2 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 text-sm transition-colors duration-200">Save Collection</button> <!-- Darker gray, lighter text, added transition -->
+                    <label for="loadCollectionInput" class="w-1/2 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 text-sm text-center cursor-pointer transition-colors duration-200">Load Collection</label> <!-- Darker gray, lighter text, added transition -->
+                    <input type="file" id="loadCollectionInput" accept=".json" class="hidden">
+                </div>
             </div>
 
-            <div class="lg:col-span-2 space-y-6">
-<div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-2xl font-semibold text-indigo-500">2. Setup Show & 3. Preview</h2>
-                        <div>
-                            <button id="setupModeButton" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md mr-2">2D Setup</button>
-                            <button id="showModeButton" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md">3D Preview</button>
-                        </div>
+            <div class="lg:col-span-2 space-y-8"> <!-- Increased space -->
+                <div class="bg-gray-800 p-7 rounded-lg shadow-xl border border-gray-700"> <!-- Increased padding, darker border, stronger shadow -->
+                    <h2 class="text-2xl font-semibold text-indigo-400 mb-5">Show Setup & Preview</h2> <!-- Increased margin bottom -->
+
+                    <!-- Tab Buttons -->
+                    <div class="flex border-b-2 border-gray-700 mb-6"> <!-- Darker and thicker bottom border, increased margin bottom -->
+                        <button id="setupTabButton" class="flex-1 text-center py-3 px-4 text-base font-medium text-gray-400 hover:text-gray-200 focus:outline-none border-b-2 border-transparent transition-colors duration-200" data-tab="setup">Place Fireworks</button> <!-- Increased padding, larger text, added transition -->
+                        <button id="showTabButton" class="flex-1 text-center py-3 px-4 text-base font-medium text-gray-400 hover:text-gray-200 focus:outline-none border-b-2 border-transparent transition-colors duration-200" data-tab="show">View Show</button> <!-- Increased padding, larger text, added transition -->
                     </div>
 
-                    <div id="setupView">
-                        <h3 class="text-xl font-semibold mb-2">2D Placement Area (Top-Down View)</h3>
-                        <div class="canvas-container-2d">
-                            <canvas id="placementCanvas2D"></canvas>
+                    <!-- Tab Content -->
+                    <div id="tabContent">
+                        <div id="setupView">
+                            <h3 class="text-xl font-semibold mb-3 text-gray-200">2D Placement Area (Top-Down View)</h3> <!-- Increased margin bottom -->
+                            <div class="canvas-container-2d border border-gray-700 rounded-md overflow-hidden"> <!-- Darker border, added rounded corners, overflow hidden -->
+                                <canvas id="placementCanvas2D"></canvas>
+                            </div>
+                            <div class="mt-6"> <!-- Increased margin top -->
+                                <label for="fireworkTiming" class="block text-sm font-medium text-gray-300">Selected Firework Timing (ms from start):</label> <!-- Lighter label color -->
+                                <input type="number" id="fireworkTiming" value="0" min="0" step="100" class="mt-2 block w-full md:w-1/2 rounded-md border-gray-600 shadow-sm p-2 bg-gray-700 text-gray-200"> <!-- Increased margin top, darker border, darker background, lighter text -->
+                                <p class="mt-2 text-xs text-gray-500">Select a firework type and click on the canvas to place it.</p> <!-- Increased margin top -->
+                            </div>
+                            <hr class="my-6 border-gray-700"> <!-- Increased margin, darker HR -->
+                            <h3 class="text-xl font-semibold mb-3 text-gray-200">Placed Fireworks</h3> <!-- Increased margin bottom -->
+                            <div id="placedFireworksList" class="space-y-3 max-h-56 overflow-y-auto bg-gray-700 p-4 rounded-md border border-gray-600 pr-2"> <!-- Increased space, increased max height, darker background, darker border, increased padding, added right padding for scrollbar -->
+                                <p class="text-gray-400 text-sm">No fireworks placed yet.</p> <!-- Slightly darker placeholder text -->
+                            </div>
+                            <div class="mt-6 flex space-x-3"> <!-- Increased margin top and space -->
+                                <button id="saveShowButton" class="w-1/2 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 text-sm transition-colors duration-200">Save Show</button> <!-- Darker gray, lighter text, added transition -->
+                                <label for="loadShowInput" class="w-1/2 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 text-sm text-center cursor-pointer transition-colors duration-200">Load Show</label> <!-- Darker gray, lighter text, added transition -->
+                                <input type="file" id="loadShowInput" accept=".json" class="hidden">
+                            </div>
                         </div>
-                        <div class="mt-4">
-                            <label for="fireworkTiming" class="block text-sm font-medium text-gray-700">Selected Firework Timing (ms from start):</label>
-                            <input type="number" id="fireworkTiming" value="0" min="0" step="100" class="mt-1 block w-full md:w-1/2 rounded-md border-gray-300 shadow-sm p-2">
-                            <p class="mt-1 text-xs text-gray-500">Select a firework type and click on the canvas to place it.</p>
-                        </div>
-                        <hr class="my-4">
-                        <h3 class="text-xl font-semibold mb-2">Placed Fireworks</h3>
-                        <div id="placedFireworksList" class="space-y-2 max-h-48 overflow-y-auto bg-gray-50 p-3 rounded-md">
-                            <p class="text-gray-500 text-sm">No fireworks placed yet.</p>
-                        </div>
-                    </div>
 
-                    <div id="showView" class="hidden">
-                        <h3 class="text-xl font-semibold mb-2">3D Show Preview</h3>
-                         <div id="threejs-canvas-container">
-                            <canvas id="threejs-canvas"></canvas>
+                        <div id="showView" class="hidden">
+                            <h3 class="text-xl font-semibold mb-3 text-gray-200">3D Show Preview</h3> <!-- Increased margin bottom -->
+                             <div id="threejs-canvas-container" class="border border-gray-700 rounded-md overflow-hidden"> <!-- Darker border, added rounded corners, overflow hidden -->
+                                <canvas id="threejs-canvas"></canvas>
+                            </div>
+                            <button id="play3DShowButton" class="mt-6 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 transition-colors duration-200">Play 3D Show</button> <!-- Increased margin top and padding, added transition -->
                         </div>
-                        <button id="play3DShowButton" class="mt-4 w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md">Play 3D Show</button>
                     </div>
                 </div>
             </div>
@@ -191,9 +272,9 @@
         window.onclick = function(event) { if (event.target == customAlertModal) customAlertModal.style.display = 'none'; }
 
         // --- Global State & Configuration (2D Part) ---
-        let fireworkTypes = []; 
-        let placedFireworks2D = []; 
-        let currentMode = 'setup'; 
+        let fireworkTypes = [];
+        let placedFireworks2D = [];
+        let currentMode = 'setup';
         let selectedFireworkTypeIdForPlacement = null;
         const MAX_BURST_COLORS = 4;
         let placementBgImage2D = new Image();
@@ -203,20 +284,20 @@
         // --- DOM Elements (2D Part) ---
         const fireworkPropertiesForm = document.getElementById('fireworkPropertiesForm');
         const fireworkNameInput = document.getElementById('fireworkName');
-        const burstHeight3DInput = document.getElementById('burstHeight3D'); 
-        const burstHeight3DValueDisplay = document.getElementById('burstHeight3DValue'); 
-        const burstRadius3DInput = document.getElementById('burstRadius3D'); 
-        const burstRadius3DValueDisplay = document.getElementById('burstRadius3DValue'); 
+        const burstHeight3DInput = document.getElementById('burstHeight3D');
+        const burstHeight3DValueDisplay = document.getElementById('burstHeight3DValue');
+        const burstRadius3DInput = document.getElementById('burstRadius3D');
+        const burstRadius3DValueDisplay = document.getElementById('burstRadius3DValue');
         const burstColorsContainer = document.getElementById('burstColorsContainer');
         const addBurstColorButton = document.getElementById('addBurstColorButton');
-        const rocketSpeed3DInput = document.getElementById('rocketSpeed3D'); 
-        const rocketSpeed3DValueDisplay = document.getElementById('rocketSpeed3DValue'); 
+        const rocketSpeed3DInput = document.getElementById('rocketSpeed3D');
+        const rocketSpeed3DValueDisplay = document.getElementById('rocketSpeed3DValue');
         const addOrUpdateFireworkTypeButton = document.getElementById('addOrUpdateFireworkTypeButton');
         const editingFireworkTypeIdInput = document.getElementById('editingFireworkTypeId');
         const fireworkTypesListDiv = document.getElementById('fireworkTypesList');
-        
-        const setupModeButton = document.getElementById('setupModeButton');
-        const showModeButton = document.getElementById('showModeButton');
+
+        const setupTabButton = document.getElementById('setupTabButton');
+        const showTabButton = document.getElementById('showTabButton');
         const setupView = document.getElementById('setupView');
         const showView = document.getElementById('showView');
 
@@ -224,20 +305,20 @@
         const placementCtx2D = placementCanvas2D.getContext('2d');
         const fireworkTimingInput = document.getElementById('fireworkTiming');
         const placedFireworksListDiv = document.getElementById('placedFireworksList');
-        
+
         // --- 3D Scene Variables ---
         let threeScene, threeCamera, threeRenderer, threePlane, threeGridHelper, threeAxesHelper;
         const threeJsCanvas = document.getElementById('threejs-canvas');
         const threeJsCanvasContainer = document.getElementById('threejs-canvas-container');
-        const threePlaneSize = 1000; 
+        const threePlaneSize = 1000;
         const threeOriginOffsetX = threePlaneSize / 2;
         const threeOriginOffsetZ = threePlaneSize / 2;
-        let threeActiveFireworks = []; 
+        let threeActiveFireworks = [];
         let threeShowIsPlaying = false;
         const play3DShowButton = document.getElementById('play3DShowButton');
 
         const screenshotCameraPos_CenterRel = { x: 605.70, y: 315.31, z: 390.47 };
-        const screenshotCameraRot_Euler = { x: -0.38, y: 0.87, z: 0.30 }; 
+        const screenshotCameraRot_Euler = { x: -0.38, y: 0.87, z: 0.30 };
         const screenshotCameraLookAt_CenterRel = { x: -395.14, y: 0.00, z: -390.81 };
 
         const precise3DCameraPos = new THREE.Vector3(
@@ -247,17 +328,17 @@
         );
         const precise3DCameraLookAt = new THREE.Vector3(
             screenshotCameraLookAt_CenterRel.x + threeOriginOffsetX,
-            screenshotCameraLookAt_CenterRel.y, 
+            screenshotCameraLookAt_CenterRel.y,
             screenshotCameraLookAt_CenterRel.z + threeOriginOffsetZ
         );
 
         // Global 3D Fireworks animation parameters
-        const GLOBAL_BURST_PARTICLES = 180;   
-        const GLOBAL_BURST_DURATION = 250;    
-        const GLOBAL_PARTICLE_LINGER_TIME = 0.35; 
-        const GLOBAL_FLASH_DURATION = 30; 
-        const GLOBAL_FLASH_MAX_SCALE = 2.8; 
-        const GLOBAL_FLASH_INITIAL_SIZE_FACTOR = 0.25; 
+        const GLOBAL_BURST_PARTICLES = 180;
+        const GLOBAL_BURST_DURATION = 250;
+        const GLOBAL_PARTICLE_LINGER_TIME = 0.35;
+        const GLOBAL_FLASH_DURATION = 30;
+        const GLOBAL_FLASH_MAX_SCALE = 2.8;
+        const GLOBAL_FLASH_INITIAL_SIZE_FACTOR = 0.25;
 
 
         // --- Utility Functions (2D & General) ---
@@ -285,7 +366,7 @@
                 placementCanvas2D.height = container.clientHeight > 0 ? container.clientHeight : 350;
             }
         }
-        
+
         function drawPlacementCanvas2D() {
             if (!placementCtx2D) return;
             placementCtx2D.clearRect(0, 0, placementCanvas2D.width, placementCanvas2D.height);
@@ -297,18 +378,18 @@
                 let sx = 0, sy = 0, sWidth = placementBgImage2D.naturalWidth, sHeight = placementBgImage2D.naturalHeight;
                 let dx = 0, dy = 0, dWidth = placementCanvas2D.width, dHeight = placementCanvas2D.height;
 
-                if (imageAspect > canvasAspect) { 
+                if (imageAspect > canvasAspect) {
                     sHeight = placementBgImage2D.naturalHeight;
                     sWidth = sHeight * canvasAspect;
                     sx = (placementBgImage2D.naturalWidth - sWidth) / 2;
-                } else if (imageAspect < canvasAspect) { 
+                } else if (imageAspect < canvasAspect) {
                     sWidth = placementBgImage2D.naturalWidth;
                     sHeight = sWidth / canvasAspect;
                     sy = (placementBgImage2D.naturalHeight - sHeight) / 2;
                 }
                 placementCtx2D.drawImage(placementBgImage2D, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
             } else {
-                placementCtx2D.fillStyle = '#e5e7eb'; // Fallback gray
+                placementCtx2D.fillStyle = '#333'; // Fallback dark gray
                 placementCtx2D.fillRect(0, 0, placementCanvas2D.width, placementCanvas2D.height);
             }
 
@@ -318,13 +399,13 @@
                 if (!type) return;
                 const x = fw.normalizedX * placementCanvas2D.width;
                 const y = fw.normalizedY * placementCanvas2D.height;
-                
+
                 placementCtx2D.beginPath();
-                placementCtx2D.arc(x, y, 6, 0, Math.PI * 2); 
-                placementCtx2D.fillStyle = type.colors[0] || '#000000'; 
+                placementCtx2D.arc(x, y, 6, 0, Math.PI * 2);
+                placementCtx2D.fillStyle = type.colors[0] || '#ffffff'; /* Use first color or white fallback */
                 placementCtx2D.fill();
                 // Add a contrasting border for better visibility on various backgrounds
-                placementCtx2D.strokeStyle = 'white'; 
+                placementCtx2D.strokeStyle = 'white';
                 placementCtx2D.lineWidth = 1.5;
                 placementCtx2D.stroke();
                 placementCtx2D.strokeStyle = 'black';
@@ -332,13 +413,13 @@
                 placementCtx2D.stroke();
                 placementCtx2D.closePath();
 
-                placementCtx2D.fillStyle = 'black'; 
+                placementCtx2D.fillStyle = 'black';
                 placementCtx2D.font = 'bold 9px Inter';
                 const text = `${fw.timing / 1000}s`;
                 const textWidth = placementCtx2D.measureText(text).width;
-                placementCtx2D.fillStyle = 'rgba(255, 255, 255, 0.7)'; 
+                placementCtx2D.fillStyle = 'rgba(255, 255, 255, 0.7)';
                 placementCtx2D.fillRect(x + 7, y - 8, textWidth + 4, 10);
-                placementCtx2D.fillStyle = 'black'; 
+                placementCtx2D.fillStyle = 'black';
                 placementCtx2D.fillText(text, x + 9, y);
             });
         }
@@ -353,22 +434,23 @@
             }
             fireworkTypes.forEach(type => {
                 const div = document.createElement('div');
-                div.className = `p-3 border rounded-md firework-item-in-list hover:bg-gray-100 ${type.id === selectedFireworkTypeIdForPlacement ? 'selected' : ''}`;
+                // Adjusted classes for dark theme list items
+                div.className = `firework-item-in-list ${type.id === selectedFireworkTypeIdForPlacement ? 'selected' : ''}`; // Use custom class
                 div.dataset.id = type.id;
-                const colorsPreview = type.colors.map(color => 
-                    `<span style="display: inline-block; width: 12px; height: 12px; background-color: ${color}; border-radius: 50%; margin-right: 4px; border: 1px solid #ccc;"></span>`
+                const colorsPreview = type.colors.map(color =>
+                    `<span style="display: inline-block; width: 12px; height: 12px; background-color: ${color}; border-radius: 50%; margin-right: 4px; border: 1px solid #555;"></span>`
                 ).join('');
                 div.innerHTML = `
                     <div class="flex justify-between items-center">
-                        <span class="font-medium">${type.name} ${colorsPreview} (H:${type.burstHeight3D}, R:${type.burstRadius3D}, S:${type.rocketSpeed3D})</span>
+                        <span class="font-medium text-gray-200">${type.name} ${colorsPreview} (H:${type.burstHeight3D}, R:${type.burstRadius3D}, S:${type.rocketSpeed3D})</span>
                         <div>
-                            <button class="edit-firework-type text-xs text-blue-500 hover:text-blue-700 mr-1" data-id="${type.id}">Edit</button>
-                            <button class="delete-firework-type text-xs text-red-500 hover:text-red-700" data-id="${type.id}">Del</button>
+                            <button class="edit-firework-type text-xs text-blue-400 hover:text-blue-300 mr-1" data-id="${type.id}">Edit</button> <!-- Adjusted blue shade -->
+                            <button class="delete-firework-type text-xs text-red-400 hover:text-red-300" data-id="${type.id}">Del</button> <!-- Adjusted red shade -->
                         </div>
                     </div>`;
                 div.onclick = () => {
                     selectedFireworkTypeIdForPlacement = type.id;
-                    renderFireworkTypesList(); 
+                    renderFireworkTypesList();
                 };
                 fireworkTypesListDiv.appendChild(div);
             });
@@ -390,13 +472,16 @@
             const div = document.createElement('div');
             div.className = 'burst-color-input-group color-input-wrapper';
             const picker = document.createElement('input'); picker.type = 'color'; picker.value = colorValue;
-            picker.className = 'p-1 h-10 w-10 block bg-white border border-gray-300 rounded-md cursor-pointer';
+            // Adjusted classes for dark theme color picker
+            picker.className = 'p-1 h-10 w-10 block bg-gray-700 border border-gray-600 rounded-md cursor-pointer';
             const textInput = document.createElement('input'); textInput.type = 'text'; textInput.value = colorValue;
-            textInput.placeholder = 'e.g., #RRGGBB'; textInput.className = 'mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 burst-color-text';
+            // Adjusted classes for dark theme text input
+            textInput.placeholder = 'e.g., #RRGGBB'; textInput.className = 'mt-1 block w-full rounded-md border-gray-600 shadow-sm p-2 burst-color-text bg-gray-700 text-gray-200'; // Used border-gray-600
             picker.oninput = () => textInput.value = picker.value;
             textInput.onchange = () => picker.value = textInput.value;
             const removeBtn = document.createElement('button'); removeBtn.type = 'button'; removeBtn.textContent = 'X';
-            removeBtn.className = 'ml-2 text-red-500 hover:text-red-700 text-xs';
+            // Adjusted classes for dark theme remove button
+            removeBtn.className = 'ml-2 text-red-400 hover:text-red-300 text-xs';
             removeBtn.onclick = () => { div.remove(); addBurstColorButton.style.display = 'inline-block'; };
             div.appendChild(picker); div.appendChild(textInput); div.appendChild(removeBtn);
             burstColorsContainer.appendChild(div);
@@ -404,13 +489,14 @@
                 addBurstColorButton.style.display = 'none';
             }
         }
-        
+
         function resetFireworkForm() {
             fireworkPropertiesForm.reset();
             burstHeight3DValueDisplay.textContent = burstHeight3DInput.value;
             burstRadius3DValueDisplay.textContent = burstRadius3DInput.value;
             rocketSpeed3DValueDisplay.textContent = rocketSpeed3DInput.value;
             burstColorsContainer.innerHTML = ''; addBurstColorInput('#FF0000');
+            addBurstColorInput('#00FF00');
             addBurstColorButton.style.display = 'inline-block';
             editingFireworkTypeIdInput.value = '';
             addOrUpdateFireworkTypeButton.textContent = 'Add Firework Type';
@@ -445,7 +531,7 @@
             if (!name) { showAlert('Firework name cannot be empty.'); return; }
             const burstColors = Array.from(burstColorsContainer.querySelectorAll('.burst-color-text')).map(input => input.value.trim()).filter(color => color);
             if (burstColors.length === 0) { showAlert('At least one burst color is required.'); return; }
-            
+
             const fireworkData = {
                 name: name,
                 burstHeight3D: parseInt(burstHeight3DInput.value),
@@ -466,12 +552,139 @@
             renderFireworkTypesList(); resetFireworkForm(); drawPlacementCanvas2D();
         });
 
-        // --- 2D Placement ---
+        // --- Save/Load Functionality ---
+        const saveCollectionButton = document.getElementById('saveCollectionButton');
+        const loadCollectionInput = document.getElementById('loadCollectionInput');
+
+        function saveFireworksCollection() {
+            const data = JSON.stringify(fireworkTypes, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'fireworks_collection.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showAlert('Fireworks collection saved.');
+        }
+
+        function loadFireworksCollection(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const loadedData = JSON.parse(e.target.result);
+                    // Basic validation: check if it's an array and items have basic properties
+                    if (!Array.isArray(loadedData) || !loadedData.every(item =>
+                        typeof item === 'object' && item !== null &&
+                        'id' in item && 'name' in item && 'colors' in item
+                    )) {
+                        throw new Error('Invalid file format.');
+                    }
+
+                    // Clear existing custom types and load new ones
+                    fireworkTypes = loadedData;
+                    placedFireworks2D = placedFireworks2D.filter(placed =>
+                       fireworkTypes.some(type => type.id === placed.fireworkTypeId)
+                    ); // Remove placed fireworks if their type no longer exists
+                    selectedFireworkTypeIdForPlacement = null; // Deselect any potentially deleted type
+
+                    renderFireworkTypesList();
+                    renderPlacedFireworksList();
+                    drawPlacementCanvas2D();
+                    resetFireworkForm(); // Reset form as the types list has changed
+                    showAlert('Fireworks collection loaded successfully.');
+
+                } catch (error) {
+                    showAlert(`Failed to load collection: ${error.message}`);
+                }
+            };
+            reader.onerror = () => {
+                showAlert('Error reading file.');
+            };
+            reader.readAsText(file);
+        }
+
+        // Add event listeners for Save/Load
+        // Add event listeners for Save/Load Collection
+        saveCollectionButton.addEventListener('click', saveFireworksCollection);
+        loadCollectionInput.addEventListener('change', loadFireworksCollection);
+
+        // --- Save/Load Show Functionality ---
+        const saveShowButton = document.getElementById('saveShowButton');
+        const loadShowInput = document.getElementById('loadShowInput');
+
+        function saveFireworksShow() {
+            const data = JSON.stringify(placedFireworks2D, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'fireworks_show.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showAlert('Fireworks show saved.');
+        }
+
+        function loadFireworksShow(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const loadedData = JSON.parse(e.target.result);
+                    // Basic validation: check if it's an array and items have basic properties
+                    if (!Array.isArray(loadedData) || !loadedData.every(item =>
+                        typeof item === 'object' && item !== null &&
+                        'id' in item && 'fireworkTypeId' in item && 'normalizedX' in item && 'normalizedY' in item && 'timing' in item
+                    )) {
+                        throw new Error('Invalid file format.');
+                    }
+
+                    // Validate referenced firework types exist
+                    const validPlacedFireworks = loadedData.filter(placed =>
+                       fireworkTypes.some(type => type.id === placed.fireworkTypeId)
+                    );
+
+                    const skippedCount = loadedData.length - validPlacedFireworks.length;
+                    if (skippedCount > 0) {
+                        showAlert(`Loaded show, but skipped ${skippedCount} placed fireworks due to missing firework types in your current collection.`);
+                    } else {
+                         showAlert('Fireworks show loaded successfully.');
+                    }
+
+                    placedFireworks2D = validPlacedFireworks;
+                    renderPlacedFireworksList();
+                    drawPlacementCanvas2D();
+
+                } catch (error) {
+                    showAlert(`Failed to load show: ${error.message}`);
+                }
+            };
+            reader.onerror = () => {
+                showAlert('Error reading file.');
+            };
+            reader.readAsText(file);
+        }
+
+         // Add event listeners for Save/Load Show
+        saveShowButton.addEventListener('click', saveFireworksShow);
+        loadShowInput.addEventListener('change', loadFireworksShow);
+
+
+           // --- 2D Placement ---
         // ... (renderPlacedFireworksList and placementCanvas2D click listener - remain the same) ...
         function renderPlacedFireworksList() {
             placedFireworksListDiv.innerHTML = '';
             if (placedFireworks2D.length === 0) {
-                placedFireworksListDiv.innerHTML = '<p class="text-gray-500 text-sm">No fireworks placed yet.</p>';
+                placedFireworksListDiv.innerHTML = '<p class="text-gray-400 text-sm">No fireworks placed yet.</p>'; // Slightly darker placeholder text
                 return;
             }
             const sortedFireworks = [...placedFireworks2D].sort((a, b) => a.timing - b.timing);
@@ -479,10 +692,11 @@
                 const type = fireworkTypes.find(t => t.id === fw.fireworkTypeId);
                 const typeName = type ? type.name : 'Unknown';
                 const div = document.createElement('div');
-                div.className = 'p-2 border rounded-md bg-white text-sm flex justify-between items-center';
+                // Adjusted classes for dark theme placed firework list items
+                div.className = 'p-3 border border-gray-600 rounded-md bg-gray-700 text-sm flex justify-between items-center text-gray-200'; // Increased padding, darker border, darker background, lighter text
                 div.innerHTML = `
                     <span><strong>${typeName}</strong> at ${fw.timing / 1000}s (Pos: ${(fw.normalizedX * 100).toFixed(0)}%,${(fw.normalizedY * 100).toFixed(0)}%)</span>
-                    <button class="delete-placed-firework text-xs text-red-500 hover:text-red-700" data-id="${fw.id}">Remove</button>
+                    <button class="delete-placed-firework text-xs text-red-400 hover:text-red-300" data-id="${fw.id}">Remove</button> <!-- Adjusted red shade -->
                 `;
                 placedFireworksListDiv.appendChild(div);
             });
@@ -493,7 +707,7 @@
                 });
             });
         }
-        
+
         placementCanvas2D.addEventListener('click', (event) => {
             if (currentMode !== 'setup' || !selectedFireworkTypeIdForPlacement) {
                 showAlert(!selectedFireworkTypeIdForPlacement ? 'Select a firework type first!' : 'Switch to Setup mode.');
@@ -506,7 +720,7 @@
             const normalizedY = y / placementCanvas2D.height;
             const timing = parseInt(fireworkTimingInput.value);
             if (isNaN(timing) || timing < 0) { showAlert('Invalid timing value.'); return; }
-            
+
             placedFireworks2D.push({
                 id: generateId(), fireworkTypeId: selectedFireworkTypeIdForPlacement,
                 normalizedX: normalizedX, normalizedY: normalizedY, timing: timing
@@ -517,24 +731,34 @@
         // --- Mode Switching ---
         function switchMode(mode) {
             currentMode = mode;
+            // Update button styles
+            document.querySelectorAll('.flex.border-b-2 button').forEach(button => { // Target the thicker border
+                if (button.dataset.tab === mode) {
+                    button.classList.add('border-blue-500', 'text-blue-500'); // Use blue accent for active tab
+                    button.classList.remove('border-transparent', 'text-gray-400');
+                } else {
+                    button.classList.add('border-transparent', 'text-gray-400');
+                    button.classList.remove('border-blue-500', 'text-blue-500');
+                }
+            });
+
+            // Show/hide content
             if (mode === 'setup') {
-                setupView.classList.remove('hidden'); showView.classList.add('hidden');
-                setupModeButton.classList.add('bg-blue-700', 'font-bold'); setupModeButton.classList.remove('bg-blue-500');
-                showModeButton.classList.add('bg-green-500'); showModeButton.classList.remove('bg-green-700', 'font-bold');
-                resize2DCanvas(); drawPlacementCanvas2D(); // Redraw 2D canvas which might now have its background
+                setupView.classList.remove('hidden');
+                showView.classList.add('hidden');
+                resize2DCanvas(); // Redraw 2D canvas which might now have its background
+                drawPlacementCanvas2D();
             } else { // 'show' mode (3D)
-                setupView.classList.add('hidden'); showView.classList.remove('hidden');
-                showModeButton.classList.add('bg-green-700', 'font-bold'); showModeButton.classList.remove('bg-green-500');
-                setupModeButton.classList.add('bg-blue-500'); setupModeButton.classList.remove('bg-blue-700', 'font-bold');
-                init3DSceneIfNeeded(); 
+                setupView.classList.add('hidden');
+                showView.classList.remove('hidden');
+                init3DSceneIfNeeded();
             }
         }
-        setupModeButton.addEventListener('click', () => switchMode('setup'));
-        showModeButton.addEventListener('click', () => switchMode('show'));
-
+        setupTabButton.addEventListener('click', () => switchMode('setup'));
+        showTabButton.addEventListener('click', () => switchMode('show'));
         // --- 3D Scene Logic ---
         function init3DSceneIfNeeded() {
-            if (!threeRenderer) { 
+            if (!threeRenderer) {
                 threeScene = new THREE.Scene();
                 // Default 3D background, may be overridden by texture
                 threeScene.background = new THREE.Color(0x111122);
@@ -542,11 +766,11 @@
                 threeCamera = new THREE.PerspectiveCamera(75, threeJsCanvasContainer.clientWidth / threeJsCanvasContainer.clientHeight, 0.1, 5000);
                 threeCamera.position.copy(precise3DCameraPos);
                 threeCamera.rotation.set(screenshotCameraRot_Euler.x, screenshotCameraRot_Euler.y, screenshotCameraRot_Euler.z);
-                threeCamera.lookAt(precise3DCameraLookAt); 
-                
+                threeCamera.lookAt(precise3DCameraLookAt);
+
                 threeRenderer = new THREE.WebGLRenderer({ canvas: threeJsCanvas, antialias: true });
                 threeRenderer.setPixelRatio(window.devicePixelRatio);
-                
+
                 // Attempt to load 3D background texture
                 const textureLoader = new THREE.TextureLoader();
                 textureLoader.load('background2.png',
@@ -564,10 +788,10 @@
                         createDefault3DGround(); // Create ground if texture fails
                     }
                 );
-                
+
 
                 threeAxesHelper = new THREE.AxesHelper(100);
-                threeAxesHelper.position.set(0,0.02,0); 
+                threeAxesHelper.position.set(0,0.02,0);
                 threeScene.add(threeAxesHelper);
                 animate3D();
             }
@@ -596,7 +820,7 @@
                 }
             }
         }
-        
+
         // ... (playActual3DShow, launch3DFirework, trigger3DBurst, animate3DFireworks - remain the same) ...
         function playActual3DShow() {
             if (threeShowIsPlaying || placedFireworks2D.length === 0) {
@@ -612,8 +836,8 @@
                 if (!type) { console.warn(`Type not found for placed firework ${fw2D.id}`); return; }
 
                 const worldX = fw2D.normalizedX * threePlaneSize;
-                const worldZ = fw2D.normalizedY * threePlaneSize; 
-                const startPosition3D = new THREE.Vector3(worldX, 0, worldZ); 
+                const worldZ = fw2D.normalizedY * threePlaneSize;
+                const startPosition3D = new THREE.Vector3(worldX, 0, worldZ);
 
                 setTimeout(() => {
                     if (!threeShowIsPlaying) return;
@@ -622,7 +846,7 @@
             });
 
             const maxTiming = placedFireworks2D.length > 0 ? Math.max(0, ...placedFireworks2D.map(fw => fw.timing)) : 0;
-            let longestFireworkDurationMs = 2000; 
+            let longestFireworkDurationMs = 2000;
             if (fireworkTypes.length > 0 && placedFireworks2D.length > 0) {
                 const relevantTypes = placedFireworks2D.map(pfw => fireworkTypes.find(ft => ft.id === pfw.fireworkTypeId)).filter(Boolean);
                 if (relevantTypes.length > 0) {
@@ -634,26 +858,26 @@
                     longestFireworkDurationMs = ((typeForDurationCalc.burstHeight3D / typeForDurationCalc.rocketSpeed3D) + GLOBAL_BURST_DURATION) / 60 * 1000;
                 }
             }
-            
+
             const approxShowDurationMs = maxTiming + longestFireworkDurationMs;
             setTimeout(() => {
                 threeShowIsPlaying = false;
                 console.log("3D Fireworks show ended (approx).");
-            }, approxShowDurationMs + 1500); 
+            }, approxShowDurationMs + 1500);
         }
         play3DShowButton.addEventListener('click', playActual3DShow);
 
 
         function launch3DFirework(startPosition, fireworkColorsArray, fireworkBurstHeight, fireworkBurstRadius, fireworkRocketSpeed) {
-            const rocketGeometry = new THREE.SphereGeometry(2.0, 8, 8); 
-            const rocketMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, emissive: 0xffffee }); 
+            const rocketGeometry = new THREE.SphereGeometry(2.0, 8, 8);
+            const rocketMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, emissive: 0xffffee });
             const rocket = {
                 type: 'rocket', mesh: new THREE.Mesh(rocketGeometry, rocketMaterial),
                 startPos: startPosition.clone(), currentPos: startPosition.clone(),
-                targetY: startPosition.y + fireworkBurstHeight, 
+                targetY: startPosition.y + fireworkBurstHeight,
                 colors: fireworkColorsArray, burstRadius: fireworkBurstRadius,
-                speed: fireworkRocketSpeed, 
-                life: 0 
+                speed: fireworkRocketSpeed,
+                life: 0
             };
             rocket.mesh.position.copy(rocket.currentPos);
             threeScene.add(rocket.mesh);
@@ -674,8 +898,8 @@
 
             const particleBurst = {
                 type: 'burst', particles: [], origin: position.clone(),
-                colors: particleColorsArray, radius: particleBurstRadius, 
-                life: 0, duration: GLOBAL_BURST_DURATION 
+                colors: particleColorsArray, radius: particleBurstRadius,
+                life: 0, duration: GLOBAL_BURST_DURATION
             };
             for (let i = 0; i < GLOBAL_BURST_PARTICLES; i++) {
                 const particleColor = particleColorsArray[i % particleColorsArray.length];
@@ -683,26 +907,26 @@
                     new THREE.SphereGeometry(1.8 + Math.random() * 1.7, 6, 6),
                     new THREE.MeshBasicMaterial({ color: particleColor, transparent: true, opacity: 1.0 })
                 );
-                const speedFactor = particleBurstRadius / (particleBurst.duration * (1 - GLOBAL_PARTICLE_LINGER_TIME)); 
-                const velocity = new THREE.Vector3((Math.random()-0.5), (Math.random()-0.5), (Math.random()-0.5)).normalize().multiplyScalar(speedFactor*(0.8+Math.random()*0.7)); 
+                const speedFactor = particleBurstRadius / (particleBurst.duration * (1 - GLOBAL_PARTICLE_LINGER_TIME));
+                const velocity = new THREE.Vector3((Math.random()-0.5), (Math.random()-0.5), (Math.random()-0.5)).normalize().multiplyScalar(speedFactor*(0.8+Math.random()*0.7));
                 particleMesh.position.copy(position);
                 threeScene.add(particleMesh);
                 particleBurst.particles.push({ mesh: particleMesh, velocity: velocity });
             }
             threeActiveFireworks.push(particleBurst);
         }
-        
+
         function animate3DFireworks() {
             for (let i = threeActiveFireworks.length - 1; i >= 0; i--) {
                 const fw = threeActiveFireworks[i];
                 fw.life++;
                 if (fw.type === 'rocket') {
-                    fw.currentPos.y += fw.speed; 
+                    fw.currentPos.y += fw.speed;
                     fw.mesh.position.y = fw.currentPos.y;
                     if (fw.currentPos.y >= fw.targetY) {
                         threeScene.remove(fw.mesh); fw.mesh.geometry.dispose(); fw.mesh.material.dispose();
-                        trigger3DBurst(fw.currentPos.clone(), fw.colors, fw.burstRadius); 
-                        threeActiveFireworks.splice(i, 1); 
+                        trigger3DBurst(fw.currentPos.clone(), fw.colors, fw.burstRadius);
+                        threeActiveFireworks.splice(i, 1);
                     }
                 } else if (fw.type === 'flash') {
                     const progress = fw.life / fw.duration;
@@ -711,9 +935,9 @@
                         threeActiveFireworks.splice(i, 1); continue;
                     }
                     fw.mesh.scale.setScalar(1 + progress * (fw.maxScale -1));
-                    fw.mesh.material.opacity = 0.9 * (1 - Math.pow(progress, 2)); 
-                } else if (fw.type === 'burst') { 
-                    if (fw.life >= fw.duration) { 
+                    fw.mesh.material.opacity = 0.9 * (1 - Math.pow(progress, 2));
+                } else if (fw.type === 'burst') {
+                    if (fw.life >= fw.duration) {
                         fw.particles.forEach(p => { threeScene.remove(p.mesh); p.mesh.geometry.dispose(); p.mesh.material.dispose(); });
                         threeActiveFireworks.splice(i, 1); continue;
                     }
@@ -721,9 +945,9 @@
                     fw.particles.forEach(p => {
                         p.mesh.position.add(p.velocity);
                         if (progress < GLOBAL_PARTICLE_LINGER_TIME) p.mesh.material.opacity = 1.0;
-                        else p.mesh.material.opacity = Math.max(0, Math.pow(1.0 - ((progress - GLOBAL_PARTICLE_LINGER_TIME) / (1.0 - GLOBAL_PARTICLE_LINGER_TIME)), 0.75)); 
-                        p.velocity.y -= 0.006; 
-                        p.mesh.position.y = Math.max(0.1, p.mesh.position.y); 
+                        else p.mesh.material.opacity = Math.max(0, Math.pow(1.0 - ((progress - GLOBAL_PARTICLE_LINGER_TIME) / (1.0 - GLOBAL_PARTICLE_LINGER_TIME)), 0.75));
+                        p.velocity.y -= 0.006;
+                        p.mesh.position.y = Math.max(0.1, p.mesh.position.y);
                     });
                 }
             }
@@ -735,16 +959,16 @@
             render3D();
         }
         function render3D() { if(threeRenderer) threeRenderer.render(threeScene, threeCamera); }
-        
+
         // --- Initial Setup (2D Part) ---
         window.addEventListener('DOMContentLoaded', () => {
             load2DPlacementBackground(); // Attempt to load 2D background
-            switchMode('setup'); 
-            addBurstColorInput('#FF0000'); 
-            addBurstColorInput('#00FF00'); 
+            switchMode('setup'); // Initialize with the setup tab active
+            addBurstColorInput('#FF0000');
+            addBurstColorInput('#00FF00');
             renderFireworkTypesList();
             renderPlacedFireworksList();
-            fireworkNameInput.value = `FW Type 1`;
+            fireworkNameInput.value = `FW Type ${fireworkTypes.length + 1}`;
 
             resize2DCanvas();
             // drawPlacementCanvas2D(); // Will be called by load2DPlacementBackground onload/onerror
@@ -758,7 +982,7 @@
         window.addEventListener('resize', () => {
             if (currentMode === 'setup') {
                 resize2DCanvas(); drawPlacementCanvas2D();
-            } else if (threeRenderer) { 
+            } else if (threeRenderer) {
                 threeRenderer.setSize(threeJsCanvasContainer.clientWidth, threeJsCanvasContainer.clientHeight);
                 threeCamera.aspect = threeJsCanvasContainer.clientWidth / threeJsCanvasContainer.clientHeight;
                 threeCamera.updateProjectionMatrix();
